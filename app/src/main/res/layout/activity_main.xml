@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!-- Title Toolbar -->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -30,7 +31,9 @@
             app:layout_constraintBottom_toBottomOf="parent"/>
     </androidx.appcompat.widget.Toolbar>
 
-    <!-- Bottom Toolbar with Buttons -->
+
+
+    <!-- Navigation Toolbar -->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbarBottom"
         android:layout_width="match_parent"
@@ -69,20 +72,37 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:layout_marginEnd="32dp"
+                android:layout_marginEnd="40dp"
                 android:layout_marginBottom="4dp"
-                app:backgroundTint="@android:color/black"
                 android:elevation="0dp"
                 android:text="Workouts"
                 android:textColor="@android:color/white"
+                app:backgroundTint="@android:color/black"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <!-- Button: Workouts -->
-
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.appcompat.widget.Toolbar>
+
+    <Button
+        android:id="@+id/createworkoutbutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:text="Create New Workout"
+        app:backgroundTint="@android:color/black"
+        app:layout_constraintBottom_toTopOf="@+id/toolbarBottom"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="409dp"
+        android:layout_height="533dp"
+        app:layout_constraintBottom_toTopOf="@+id/createworkoutbutton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
