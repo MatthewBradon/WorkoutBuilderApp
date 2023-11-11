@@ -13,10 +13,11 @@
         android:theme="@style/Theme.WorkoutBuilder"
         tools:targetApi="31">
         <activity
-            android:name=".NewWorkoutActivity"
-            android:exported="false"
-            android:label="@string/title_activity_new_workout"
-            android:theme="@style/Theme.WorkoutBuilder" />
+            android:name=".StepCounter"
+            android:exported="true"
+            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar">
+        </activity>
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
