@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".ChangeExercise">
 
     <!-- Title Toolbar -->
     <androidx.appcompat.widget.Toolbar
@@ -22,7 +22,7 @@
             android:id="@+id/toolbarTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Your Workouts"
+            android:text="Change Exercise"
             android:textColor="@android:color/black"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -87,23 +87,14 @@
 
     </androidx.appcompat.widget.Toolbar>
 
-    <Button
-        android:id="@+id/createworkoutbutton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:text="Create New Workout"
-        app:backgroundTint="@android:color/black"
-        app:layout_constraintBottom_toTopOf="@+id/toolbarBottom"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <androidx.recyclerview.widget.RecyclerView
+    <ListView
+        android:id="@+id/exerciseLV"
         android:layout_width="409dp"
-        android:layout_height="533dp"
-        app:layout_constraintBottom_toTopOf="@+id/createworkoutbutton"
+        android:layout_height="603dp"
+        app:layout_constraintBottom_toTopOf="@+id/toolbarBottom"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

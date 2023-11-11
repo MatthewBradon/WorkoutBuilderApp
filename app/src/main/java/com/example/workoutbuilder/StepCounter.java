@@ -40,11 +40,14 @@ public class StepCounter extends AppCompatActivity implements SensorEventListene
         }
 
 
+
         //Navigation Buttons to other activities
         workoutsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                Intent intent = new Intent(StepCounter.this, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
             }
         });
 
@@ -60,6 +63,7 @@ public class StepCounter extends AppCompatActivity implements SensorEventListene
         }
     }
 
+    /*
     @Override
     protected void onStop() {
         super.onStop();
@@ -68,6 +72,7 @@ public class StepCounter extends AppCompatActivity implements SensorEventListene
             sensorManager.unregisterListener(this);
         }
     }
+     */
 
     //Methods to implement from SensorEventListener
     @Override
