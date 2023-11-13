@@ -86,4 +86,13 @@ public class Exercise {
                 ", muscleGroup='" + muscleGroup + '\'' +
                 '}';
     }
+
+    public static Exercise fromJSON(JSONObject json) throws JSONException {
+        String name = json.getString("name");
+        int rpe = json.getInt("rpe");
+        int reps = json.getInt("reps");
+        String type = json.getString("type");
+        String muscleGroup = json.getString("muscleGroup");
+        return new Exercise(name, rpe, reps, type, muscleGroup);
+    }
 }

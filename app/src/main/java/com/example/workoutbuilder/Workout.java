@@ -43,6 +43,16 @@ public class Workout {
         return json;
     }
 
+    public static Workout fromJSON(JSONObject json) throws JSONException {
+        ArrayList<Exercise> exercises = new ArrayList<>();
+        JSONArray jsonArray = json.getJSONArray("exercises");
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject jsonExercise = jsonArray.getJSONObject(i);
+            exercises.add(Exercise.fromJSON(jsonExercise));
+        }
+        return new Workout(exercises);
+    }
+
     //Display the workout as a string
 
     @Override

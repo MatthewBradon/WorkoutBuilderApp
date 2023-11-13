@@ -117,7 +117,18 @@ public class CreateWorkout extends AppCompatActivity {
                 System.out.println(program.toString());
 
 
-                //finish();
+                Intent data = new Intent();
+
+                try {
+                    System.out.println(program.toJSON().toString());
+                    data.putExtra("program", program.toJSON().toString());
+                } catch (JSONException e){
+                    e.printStackTrace();
+                }
+
+                setResult(RESULT_OK, data);
+
+                finish();
         });
     }
 
@@ -205,8 +216,8 @@ public class CreateWorkout extends AppCompatActivity {
         exercises.add(generateCompound("Back"));
         exercises.add(generateCompound("Shoulders"));
         exercises.add(generateAccessory("Back"));
-        exercises.add(generateAccessory("Bicep"));
-        exercises.add(generateAccessory("Tricep"));
+        exercises.add(generateAccessory("Biceps"));
+        exercises.add(generateAccessory("Triceps"));
 
         workouts.add(new Workout(exercises));
 
@@ -230,8 +241,8 @@ public class CreateWorkout extends AppCompatActivity {
             exercises.add(generateCompound("Back"));
             exercises.add(generateCompound("Shoulders"));
             exercises.add(generateAccessory("Back"));
-            exercises.add(generateAccessory("Bicep"));
-            exercises.add(generateAccessory("Tricep"));
+            exercises.add(generateAccessory("Biceps"));
+            exercises.add(generateAccessory("Triceps"));
 
             workouts.add(new Workout(exercises));
 
@@ -259,21 +270,19 @@ public class CreateWorkout extends AppCompatActivity {
         //Push Workout
         exercises.add(generateCompound("Chest"));
         exercises.add(generateCompound("Shoulders"));
-        exercises.add(generateAccessory("Tricep"));
-        exercises.add(generateAccessory("Tricep"));
+        exercises.add(generateAccessory("Triceps"));
+        exercises.add(generateAccessory("Triceps"));
         exercises.add(generateAccessory("Chest"));
-        System.out.println(exercises);
 
 
         workouts.add(new Workout(exercises));
-        System.out.println(workouts);
 
         //Pull Workout
         exercises = new ArrayList<>();
 
         exercises.add(generateCompound("Back"));
         exercises.add(generateAccessory("Back"));
-        exercises.add(generateAccessory("Bicep"));
+        exercises.add(generateAccessory("Biceps"));
         exercises.add(generateAccessory("Shoulders"));
 
 
@@ -296,8 +305,8 @@ public class CreateWorkout extends AppCompatActivity {
             //Push Workout
             exercises.add(generateCompound("Chest"));
             exercises.add(generateCompound("Shoulders"));
-            exercises.add(generateAccessory("Tricep"));
-            exercises.add(generateAccessory("Tricep"));
+            exercises.add(generateAccessory("Triceps"));
+            exercises.add(generateAccessory("Triceps"));
             exercises.add(generateAccessory("Chest")); 
 
             workouts.add(new Workout(exercises));
@@ -306,7 +315,7 @@ public class CreateWorkout extends AppCompatActivity {
 
             exercises.add(generateCompound("Back"));
             exercises.add(generateAccessory("Back"));
-            exercises.add(generateAccessory("Bicep"));
+            exercises.add(generateAccessory("Biceps"));
             exercises.add(generateAccessory("Shoulders"));
 
             workouts.add(new Workout(exercises));
@@ -330,8 +339,8 @@ public class CreateWorkout extends AppCompatActivity {
         //Push Workout
         exercises.add(generateCompound("Chest"));
         exercises.add(generateCompound("Shoulders"));
-        exercises.add(generateAccessory("Tricep"));
-        exercises.add(generateAccessory("Tricep"));
+        exercises.add(generateAccessory("Triceps"));
+        exercises.add(generateAccessory("Triceps"));
         exercises.add(generateAccessory("Chest")); 
 
         workouts.add(new Workout(exercises));
@@ -340,7 +349,7 @@ public class CreateWorkout extends AppCompatActivity {
 
         exercises.add(generateCompound("Back"));
         exercises.add(generateAccessory("Back"));
-        exercises.add(generateAccessory("Bicep"));
+        exercises.add(generateAccessory("Biceps"));
         exercises.add(generateAccessory("Shoulders"));
 
 
@@ -361,8 +370,8 @@ public class CreateWorkout extends AppCompatActivity {
         exercises.add(generateCompound("Back"));
         exercises.add(generateCompound("Shoulders"));
         exercises.add(generateAccessory("Back"));
-        exercises.add(generateAccessory("Bicep"));
-        exercises.add(generateAccessory("Tricep"));
+        exercises.add(generateAccessory("Biceps"));
+        exercises.add(generateAccessory("Triceps"));
 
         workouts.add(new Workout(exercises));
 
