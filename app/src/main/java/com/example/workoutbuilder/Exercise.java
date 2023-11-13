@@ -73,4 +73,17 @@ public class Exercise {
         return json;
     }
 
+    // Display the exercise as a string
+
+
+    @Override
+    public String toString() {
+        return "Exercise{" +
+                "name='" + name + '\'' +
+                ", rpe=" + rpe +
+                ", reps=" + reps +
+                ", type='" + type + '\'' +
+                ", muscleGroup='" + muscleGroup + '\'' +
+                '}';
+    }
 }

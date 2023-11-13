@@ -42,4 +42,13 @@ public class Workout {
         json.put("exercises", exercisesToJSON());
         return json;
     }
+
+    //Display the workout as a string
+
+    @Override
+    public String toString() {
+        return "Workout{" +
+                "exercises=" + exercises +
+                '}';
+    }
 }

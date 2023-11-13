@@ -57,4 +57,13 @@ public class Program {
 
         return json;
     }
+
+    @Override
+    public String toString() {
+        return "Program{" +
+                "workouts=" + workouts +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                '}';
+    }
 }

@@ -2,6 +2,7 @@ package com.example.workoutbuilder;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -21,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 public class CreateWorkout extends AppCompatActivity {
@@ -28,7 +30,9 @@ public class CreateWorkout extends AppCompatActivity {
     private Button stepCounterBtn, workoutsBtn, createBtn;
     private TextInputEditText workoutName, workoutDescription;
     private Spinner spinner;
-    private ArrayList<CheckBox> daysOfWeek;
+    private final ArrayList<CheckBox> daysOfWeek = new ArrayList<>();
+    private HashMap<String, ArrayList<Exercise>> muscleGroupMap = new HashMap<>();
+
 
     private enum ProgramType {
         FULL_BODY, UPPER_LOWER, PUSH_PULL_LEGS, PUSH_PULL_LEGS_UPPER_LOWER
@@ -64,25 +68,17 @@ public class CreateWorkout extends AppCompatActivity {
         // Apply the adapter to the spinner
         spinner.setAdapter(adapter);
 
-        workoutsBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        workoutsBtn.setOnClickListener(v -> {
                 finish();
-            }
         });
 
-        stepCounterBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        stepCounterBtn.setOnClickListener(v -> {
                 Intent intent = new Intent(CreateWorkout.this, StepCounter.class);
                 startActivity(intent);
-            }
         });
 
 
-        createBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        createBtn.setOnClickListener(v -> {
                 
                 //Calculate number of available days and the max consecutive rest days
                 //Both of these are used to determine the number of workouts and split to generate
@@ -106,11 +102,22 @@ public class CreateWorkout extends AppCompatActivity {
                     return;
                 }
 
-                //Generate the workout
+                //Calculate the program split and type of workouts
+                String trainingType = spinner.getSelectedItem().toString();
+                int accessoryRepCount = trainingType.equals("Strength") ? 8 : 12;
+                int compoundRepCount = trainingType.equals("Strength") ? 5 : 8;
 
-                
-                finish();
-            }
+                //Get the muscle group map
+                muscleGroupMap = getMuscleGroupMap(this ,accessoryRepCount, compoundRepCount, "exercises.json");
+
+                //Generate Program
+                Program program = generateProgram(numOfAvailableDays, maxConsecutiveRestDays);
+
+                //Display the program
+                System.out.println(program.toString());
+
+
+                //finish();
         });
     }
 
@@ -118,15 +125,9 @@ public class CreateWorkout extends AppCompatActivity {
 
         ProgramType programType = ProgramType.FULL_BODY;
         
-        String filePath = "exercises.json";
-        ArrayList<Exercise> allExercises = new ArrayList<>();
         ArrayList<Workout> workouts;
-        ArrayList<Exercise> exercises;
 
-        //Calculate the program split and type of workouts
-        String trainingType = spinner.getSelectedItem().toString();
-        int accessoryRepCount = trainingType.equals("Strength") ? 8 : 12;
-        int compoundRepCount = trainingType.equals("Strength") ? 5 : 8;
+ 
 
         switch (numOfAvailableDays) {
             case 1:
@@ -146,84 +147,44 @@ public class CreateWorkout extends AppCompatActivity {
                 programType = ProgramType.PUSH_PULL_LEGS_UPPER_LOWER;
                 break;
         }
-        // Create an ArrayList to store all exercises from JSON File
-        try (InputStream inputStream = CreateWorkout.class.getClassLoader().getResourceAsStream(filePath)) {
-            if (inputStream == null) {
-                System.out.println("File not found: " + filePath);
-            } else {
-                try {
-                    //Create a JSON array from the JSON file
-                    JSONArray jsonArray = new JSONArray(new InputStreamReader(inputStream));
 
-                    //Go through each exercise in the JSON array and add it to the ArrayList
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject jsonExercise = jsonArray.getJSONObject(i);
 
-                        String name = jsonExercise.getString("name");
-                        String type = jsonExercise.getString("type");
-                        String muscleGroup = jsonExercise.getString("muscle_group");
-
-                        int repCount = type.equals("Compound") ? compoundRepCount : accessoryRepCount;
-                        int rpe = type.equals("Compound") ? 9 : 7;
-
-                        Exercise exercise = new Exercise(name, repCount, rpe, type, muscleGroup);
-                        allExercises.add(exercise);
-                    }
-                } catch (JSONException e){
-                    e.printStackTrace();
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
         //Generate the workout based on the number of available days
         switch (programType) {
             case FULL_BODY:
-                workouts = generateFullBodyWorkouts(allExercises, numOfAvailableDays);
+                System.out.println("FULL BODY");
+                workouts = generateFullBodyWorkouts(numOfAvailableDays);
                 break;
             case UPPER_LOWER:
-                workouts = generateUpperLowerWorkouts(allExercises, numOfAvailableDays);
+                System.out.println("UPPER LOWER");
+                workouts = generateUpperLowerWorkouts(numOfAvailableDays);
                 break;
             case PUSH_PULL_LEGS:
-                workouts = generatePushPullLegsWorkouts(allExercises, numOfAvailableDays);
+                System.out.println("PUSH PULL LEGS");
+                workouts = generatePushPullLegsWorkouts(numOfAvailableDays);
                 break;
             case PUSH_PULL_LEGS_UPPER_LOWER:
-                workouts = generatePushPullLegsUpperLowerWorkouts(allExercises, numOfAvailableDays);
+                System.out.println("PUSH PULL LEGS UPPER LOWER");
+                workouts = generatePushPullLegsUpperLowerWorkouts();
                 break;
             default:
-                workouts = null;
+                return null;
         }
 
         //Create the program
         return new Program(workouts, workoutName.getText().toString(), workoutDescription.getText().toString());
 
     }
-/*
-    private ArrayList<Exercise> createExerciseList(String[] names, ArrayList<Exercise> allExercises) {
-        ArrayList<Exercise> exercises = new ArrayList<>();
 
-        // Convert the names array to a list
-        List<String> namesList = Arrays.asList(names);
-
-        // Go through allExercises and add the ones with names in the names ArrayList to exercises
-        for (Exercise exercise : allExercises) {
-            if (namesList.contains(exercise.getName())) {
-                exercises.add(exercise);
-            }
-        }
-        return exercises;
-    }
-*/
-
-    private ArrayList<Workout> generateFullBodyWorkouts(ArrayList<Exercise> allExercises, int numOfAvailableDays) {
+    private ArrayList<Workout> generateFullBodyWorkouts(int numOfAvailableDays) {
         ArrayList<Workout> workouts = new ArrayList<>();
         ArrayList<Exercise> exercises = new ArrayList<>();
 
-        exercises.add(generateCompound("Chest", allExercises));
-        exercises.add(generateCompound("Back", allExercises));
-        exercises.add(generateCompound("Legs", allExercises));
-        exercises.add(generateCompound("Shoulders", allExercises));
+        exercises.add(generateCompound("Chest"));
+        exercises.add(generateCompound("Back"));
+        exercises.add(generateCompound("Legs"));
+        exercises.add(generateCompound("Shoulders"));
 
         workouts.add(new Workout(exercises));
 
@@ -235,28 +196,28 @@ public class CreateWorkout extends AppCompatActivity {
         return workouts;
     }
 
-    private ArrayList<Workout> generateUpperLowerWorkouts(ArrayList<Exercise> allExercises, int numOfAvailableDays) {
+    private ArrayList<Workout> generateUpperLowerWorkouts(int numOfAvailableDays) {
         ArrayList<Workout> workouts = new ArrayList<>();
         ArrayList<Exercise> exercises = new ArrayList<>();
 
         //Upper Body Workout
-        exercises.add(generateCompound("Chest", allExercises));
-        exercises.add(generateCompound("Back", allExercises));
-        exercises.add(generateCompound("Shoulders", allExercises));
-        exercises.add(generateAccessory("Back", allExercises));
-        exercises.add(generateAccessory("Bicep", allExercises));
-        exercises.add(generateAccessory("Tricep", allExercises));
+        exercises.add(generateCompound("Chest"));
+        exercises.add(generateCompound("Back"));
+        exercises.add(generateCompound("Shoulders"));
+        exercises.add(generateAccessory("Back"));
+        exercises.add(generateAccessory("Bicep"));
+        exercises.add(generateAccessory("Tricep"));
 
         workouts.add(new Workout(exercises));
 
         //Lower Body Workout
         exercises = new ArrayList<>();
 
-        exercises.add(generateCompound("Legs", allExercises));
-        exercises.add(generateAccessory("Quads", allExercises));
-        exercises.add(generateAccessory("Hamstrings", allExercises));
-        exercises.add(generateAccessory("Glutes", allExercises));
-        exercises.add(generateAccessory("Calves", allExercises));
+        exercises.add(generateCompound("Legs"));
+        exercises.add(generateAccessory("Quads"));
+        exercises.add(generateAccessory("Hamstrings"));
+        exercises.add(generateAccessory("Glutes"));
+        exercises.add(generateAccessory("Calves"));
 
         workouts.add(new Workout(exercises));
 
@@ -265,23 +226,23 @@ public class CreateWorkout extends AppCompatActivity {
             exercises = new ArrayList<>();
 
             //Upper Body Workout
-            exercises.add(generateCompound("Chest", allExercises));
-            exercises.add(generateCompound("Back", allExercises));
-            exercises.add(generateCompound("Shoulders", allExercises));
-            exercises.add(generateAccessory("Back", allExercises));
-            exercises.add(generateAccessory("Bicep", allExercises));
-            exercises.add(generateAccessory("Tricep", allExercises));
+            exercises.add(generateCompound("Chest"));
+            exercises.add(generateCompound("Back"));
+            exercises.add(generateCompound("Shoulders"));
+            exercises.add(generateAccessory("Back"));
+            exercises.add(generateAccessory("Bicep"));
+            exercises.add(generateAccessory("Tricep"));
 
             workouts.add(new Workout(exercises));
 
             //Lower Body Workout
             exercises = new ArrayList<>();
 
-            exercises.add(generateCompound("Legs", allExercises));
-            exercises.add(generateAccessory("Quads", allExercises));
-            exercises.add(generateAccessory("Hamstrings", allExercises));
-            exercises.add(generateAccessory("Glutes", allExercises));
-            exercises.add(generateAccessory("Calves", allExercises));
+            exercises.add(generateCompound("Legs"));
+            exercises.add(generateAccessory("Quads"));
+            exercises.add(generateAccessory("Hamstrings"));
+            exercises.add(generateAccessory("Glutes"));
+            exercises.add(generateAccessory("Calves"));
 
             workouts.add(new Workout(exercises));
 
@@ -291,36 +252,40 @@ public class CreateWorkout extends AppCompatActivity {
     }
 
 
-    private ArrayList<Workout> generatePushPullLegsWorkouts(ArrayList<Exercise> allExercises, int numOfAvailableDays) {
+    private ArrayList<Workout> generatePushPullLegsWorkouts(int numOfAvailableDays) {
         ArrayList<Workout> workouts = new ArrayList<>();
         ArrayList<Exercise> exercises = new ArrayList<>();
 
         //Push Workout
-        exercises.add(generateCompound("Chest", allExercises));
-        exercises.add(generateCompound("Shoulders", allExercises));
-        exercises.add(generateAccessory("Tricep", allExercises));
-        exercises.add(generateAccessory("Tricep", allExercises));
-        exercises.add(generateAccessory("Chest", allExercises)); 
+        exercises.add(generateCompound("Chest"));
+        exercises.add(generateCompound("Shoulders"));
+        exercises.add(generateAccessory("Tricep"));
+        exercises.add(generateAccessory("Tricep"));
+        exercises.add(generateAccessory("Chest"));
+        System.out.println(exercises);
+
 
         workouts.add(new Workout(exercises));
+        System.out.println(workouts);
+
         //Pull Workout
         exercises = new ArrayList<>();
 
-        exercises.add(generateCompound("Back", allExercises));
-        exercises.add(generateAccessory("Back", allExercises));
-        exercises.add(generateAccessory("Bicep", allExercises));
-        exercises.add(generateAccessory("Shoulders", allExercises));
+        exercises.add(generateCompound("Back"));
+        exercises.add(generateAccessory("Back"));
+        exercises.add(generateAccessory("Bicep"));
+        exercises.add(generateAccessory("Shoulders"));
 
 
         workouts.add(new Workout(exercises));
         //Legs Workout
         exercises = new ArrayList<>();
 
-        exercises.add(generateCompound("Legs", allExercises));
-        exercises.add(generateAccessory("Quads", allExercises));
-        exercises.add(generateAccessory("Hamstrings", allExercises));
-        exercises.add(generateAccessory("Glutes", allExercises));
-        exercises.add(generateAccessory("Calves", allExercises));
+        exercises.add(generateCompound("Legs"));
+        exercises.add(generateAccessory("Quads"));
+        exercises.add(generateAccessory("Hamstrings"));
+        exercises.add(generateAccessory("Glutes"));
+        exercises.add(generateAccessory("Calves"));
 
         workouts.add(new Workout(exercises));
 
@@ -329,123 +294,184 @@ public class CreateWorkout extends AppCompatActivity {
             exercises = new ArrayList<>();
 
             //Push Workout
-            exercises.add(generateCompound("Chest", allExercises));
-            exercises.add(generateCompound("Shoulders", allExercises));
-            exercises.add(generateAccessory("Tricep", allExercises));
-            exercises.add(generateAccessory("Tricep", allExercises));
-            exercises.add(generateAccessory("Chest", allExercises)); 
+            exercises.add(generateCompound("Chest"));
+            exercises.add(generateCompound("Shoulders"));
+            exercises.add(generateAccessory("Tricep"));
+            exercises.add(generateAccessory("Tricep"));
+            exercises.add(generateAccessory("Chest")); 
 
             workouts.add(new Workout(exercises));
             //Pull Workout
             exercises = new ArrayList<>();
 
-            exercises.add(generateCompound("Back", allExercises));
-            exercises.add(generateAccessory("Back", allExercises));
-            exercises.add(generateAccessory("Bicep", allExercises));
-            exercises.add(generateAccessory("Shoulders", allExercises));
+            exercises.add(generateCompound("Back"));
+            exercises.add(generateAccessory("Back"));
+            exercises.add(generateAccessory("Bicep"));
+            exercises.add(generateAccessory("Shoulders"));
 
             workouts.add(new Workout(exercises));
             //Legs Workout
             exercises = new ArrayList<>();
 
-            exercises.add(generateCompound("Legs", allExercises));
-            exercises.add(generateAccessory("Quads", allExercises));
-            exercises.add(generateAccessory("Hamstrings", allExercises));
-            exercises.add(generateAccessory("Glutes", allExercises));
-            exercises.add(generateAccessory("Calves", allExercises));
+            exercises.add(generateCompound("Legs"));
+            exercises.add(generateAccessory("Quads"));
+            exercises.add(generateAccessory("Hamstrings"));
+            exercises.add(generateAccessory("Glutes"));
+            exercises.add(generateAccessory("Calves"));
         }
 
         return workouts;
     }
 
-    private ArrayList<Workout> generatePushPullLegsUpperLowerWorkouts(ArrayList<Exercise> allExercises, int numOfAvailableDays) {
+    private ArrayList<Workout> generatePushPullLegsUpperLowerWorkouts() {
         ArrayList<Workout> workouts = new ArrayList<>();
         ArrayList<Exercise> exercises = new ArrayList<>();
 
         //Push Workout
-        exercises.add(generateCompound("Chest", allExercises));
-        exercises.add(generateCompound("Shoulders", allExercises));
-        exercises.add(generateAccessory("Tricep", allExercises));
-        exercises.add(generateAccessory("Tricep", allExercises));
-        exercises.add(generateAccessory("Chest", allExercises)); 
+        exercises.add(generateCompound("Chest"));
+        exercises.add(generateCompound("Shoulders"));
+        exercises.add(generateAccessory("Tricep"));
+        exercises.add(generateAccessory("Tricep"));
+        exercises.add(generateAccessory("Chest")); 
 
         workouts.add(new Workout(exercises));
         //Pull Workout
         exercises = new ArrayList<>();
 
-        exercises.add(generateCompound("Back", allExercises));
-        exercises.add(generateAccessory("Back", allExercises));
-        exercises.add(generateAccessory("Bicep", allExercises));
-        exercises.add(generateAccessory("Shoulders", allExercises));
+        exercises.add(generateCompound("Back"));
+        exercises.add(generateAccessory("Back"));
+        exercises.add(generateAccessory("Bicep"));
+        exercises.add(generateAccessory("Shoulders"));
 
 
         workouts.add(new Workout(exercises));
         //Legs Workout
         exercises = new ArrayList<>();
 
-        exercises.add(generateCompound("Legs", allExercises));
-        exercises.add(generateAccessory("Quads", allExercises));
-        exercises.add(generateAccessory("Hamstrings", allExercises));
-        exercises.add(generateAccessory("Glutes", allExercises));
-        exercises.add(generateAccessory("Calves", allExercises));
+        exercises.add(generateCompound("Legs"));
+        exercises.add(generateAccessory("Quads"));
+        exercises.add(generateAccessory("Hamstrings"));
+        exercises.add(generateAccessory("Glutes"));
+        exercises.add(generateAccessory("Calves"));
 
         workouts.add(new Workout(exercises));
 
         //Upper Body Workout
-        exercises.add(generateCompound("Chest", allExercises));
-        exercises.add(generateCompound("Back", allExercises));
-        exercises.add(generateCompound("Shoulders", allExercises));
-        exercises.add(generateAccessory("Back", allExercises));
-        exercises.add(generateAccessory("Bicep", allExercises));
-        exercises.add(generateAccessory("Tricep", allExercises));
+        exercises.add(generateCompound("Chest"));
+        exercises.add(generateCompound("Back"));
+        exercises.add(generateCompound("Shoulders"));
+        exercises.add(generateAccessory("Back"));
+        exercises.add(generateAccessory("Bicep"));
+        exercises.add(generateAccessory("Tricep"));
 
         workouts.add(new Workout(exercises));
 
         //Lower Body Workout
         exercises = new ArrayList<>();
 
-        exercises.add(generateCompound("Legs", allExercises));
-        exercises.add(generateAccessory("Quads", allExercises));
-        exercises.add(generateAccessory("Hamstrings", allExercises));
-        exercises.add(generateAccessory("Glutes", allExercises));
-        exercises.add(generateAccessory("Calves", allExercises));
+        exercises.add(generateCompound("Legs"));
+        exercises.add(generateAccessory("Quads"));
+        exercises.add(generateAccessory("Hamstrings"));
+        exercises.add(generateAccessory("Glutes"));
+        exercises.add(generateAccessory("Calves"));
 
         workouts.add(new Workout(exercises));
         return workouts;
     }
 
-    private Exercise generateAccessory(String muscleGroup , ArrayList<Exercise> allExercises) {
+    private Exercise generateAccessory(String muscleGroup) {
         //TODO - Make sure exercise is not already in the workout
 
+        ArrayList<Exercise> muscleGroupExercises = muscleGroupMap.get(muscleGroup);
+        ArrayList<Exercise> accessoryExercises = new ArrayList<>();
 
-        //Create a list of all exercises that target the muscle group
-        ArrayList<Exercise> muscleGroupExercises = new ArrayList<>();
+        if(muscleGroupExercises == null || muscleGroupExercises.isEmpty()){
+            return null;
+        }
 
-        for(Exercise exercise : allExercises){
-            if(exercise.getMuscleGroup().equals(muscleGroup) && exercise.getType().equals("Accessory")){
-                muscleGroupExercises.add(exercise);
+        for(Exercise exercise : muscleGroupExercises){
+            if(exercise.getType().equals("Accessory")){
+                accessoryExercises.add(exercise);   
             }
         }
 
         //Pick a random exercise from the list
-        int randomIndex = (int) (Math.random() * muscleGroupExercises.size());
-        return muscleGroupExercises.get(randomIndex);
+        int randomIndex = (int) (Math.random() * accessoryExercises.size());
+        return accessoryExercises.get(randomIndex);
 
     }
 
-    private Exercise generateCompound(String muscleGroup , ArrayList<Exercise> allExercises) {
+    private Exercise generateCompound(String muscleGroup) {
 
         //Create a list of all exercises that target the muscle group
-        ArrayList<Exercise> muscleGroupExercises = new ArrayList<>();
-
-        for(Exercise exercise : allExercises){
-            if(exercise.getMuscleGroup().equals(muscleGroup) && exercise.getType().equals("Compound")){
-                muscleGroupExercises.add(exercise);
-            }
+        ArrayList<Exercise> muscleGroupExercises = muscleGroupMap.get(muscleGroup);
+        ArrayList<Exercise> compoundExercises = new ArrayList<>();
+        
+        if(muscleGroupExercises == null || muscleGroupExercises.isEmpty()){
+            return null;
         }
 
+        for(Exercise exercise : muscleGroupExercises){
+            if(exercise.getType().equals("Compound")){
+                compoundExercises.add(exercise);   
+            }
+        }
+       
         //Pick a random exercise from the list
-        int randomIndex = (int) (Math.random() * muscleGroupExercises.size());
-        return muscleGroupExercises.get(randomIndex);
+        int randomIndex = (int) (Math.random() * compoundExercises.size());
+        return compoundExercises.get(randomIndex);
     }
+    
+
+
+   
+    public static HashMap<String, ArrayList<Exercise>> getMuscleGroupMap(Context context, int accessoryRepCount, int compoundRepCount, String filePath) {
+        HashMap<String, ArrayList<Exercise>> muscleGroupMap = new HashMap<>();
+        ArrayList<Exercise> allExercises = new ArrayList<>();
+
+        try {
+            InputStream inputStream = context.getAssets().open(filePath);
+            int size = inputStream.available();
+            byte[] buffer = new byte[size];
+            inputStream.read(buffer);
+            inputStream.close();
+            String json = new String(buffer, "UTF-8");
+            try {
+                // Parse the main JSON object
+                JSONObject mainJsonObject = new JSONObject(json);
+
+                // Extract the "exercises" JSONArray from the main JSON object
+                JSONArray jsonArray = mainJsonObject.getJSONArray("exercises");
+
+                //Go through each exercise in the JSON array and add it to the ArrayList
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonExercise = jsonArray.getJSONObject(i);
+
+                    String name = jsonExercise.getString("name");
+                    String type = jsonExercise.getString("type");
+                    String muscleGroup = jsonExercise.getString("muscle_group");
+
+                    int repCount = type.equals("Compound") ? compoundRepCount : accessoryRepCount;
+                    int rpe = type.equals("Compound") ? 9 : 7;
+
+                    Exercise exercise = new Exercise(name, repCount, rpe, type, muscleGroup);
+                    allExercises.add(exercise);
+                }
+
+                // Separate exercises into muscle groups
+                for (Exercise exercise : allExercises) {
+                    // If the muscle group is not in the map, add it and add the exercise to the list
+                    muscleGroupMap.computeIfAbsent(exercise.getMuscleGroup(), k -> new ArrayList<>()).add(exercise);
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return muscleGroupMap;
+    }
+
 }
