@@ -1,35 +1,17 @@
 package com.example.workoutbuilder;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 public class Workout {
-    private String name;
-    private String description;
     private ArrayList<Exercise> exercises;
 
     // Constructor
-    public Workout(String name, String description, ArrayList<Exercise> exercises) {
-        this.name = name;
-        this.description = description;
+    public Workout(ArrayList<Exercise> exercises) {
         this.exercises = exercises;
-    }
-
-    // Getter and Setter methods for name
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    // Getter and Setter methods for description
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     // Getter and Setter methods for exercises
@@ -44,5 +26,20 @@ public class Workout {
     // Method to add an exercise to the workout
     public void addExercise(Exercise exercise) {
         exercises.add(exercise);
+    }
+
+
+    public JSONArray exercisesToJSON() throws JSONException {
+        JSONArray jsonArray = new JSONArray();
+        for (Exercise exercise : exercises) {
+            jsonArray.put(exercise.toJSON());
+        }
+        return jsonArray;
+    }
+
+    public JSONObject toJSON() throws JSONException {
+        JSONObject json = new JSONObject();
+        json.put("exercises", exercisesToJSON());
+        return json;
     }
 }

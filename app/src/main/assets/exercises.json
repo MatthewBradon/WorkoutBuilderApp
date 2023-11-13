@@ -1,0 +1,99 @@
+{
+  "exercises": [
+    {
+      "name": "Bench Press",
+      "type": "Compound",
+      "muscle_group": "Chest"
+    },
+    {
+      "name": "Barbell Squat",
+      "type": "Compound",
+      "muscle_group": "Legs"
+    },
+    {
+      "name": "Dumbbell Rows",
+      "type": "Accessory",
+      "muscle_group": "Back"
+    },
+    {
+      "name": "Tricep Dips",
+      "type": "Accessory",
+      "muscle_group": "Triceps"
+    },
+    {
+      "name": "Leg Press",
+      "type": "Accessory",
+      "muscle_group": "Glutes"
+    },
+    {
+      "name": "Hammer Curls",
+      "type": "Accessory",
+      "muscle_group": "Biceps"
+    },
+    {
+      "name": "Deadlift",
+      "type": "Compound",
+      "muscle_group": "Back"
+    },
+    {
+      "name": "Leg Extension",
+      "type": "Accessory",
+      "muscle_group": "Quads"
+    },
+    {
+      "name": "Overhead Press",
+      "type": "Compound",
+      "muscle_group": "Shoulders"
+    },
+    {
+      "name": "Lat Pulldown",
+      "type": "Accessory",
+      "muscle_group": "Back"
+    },
+    {
+      "name": "Chest Flyes",
+      "type": "Accessory",
+      "muscle_group": "Chest"
+    },
+    {
+      "name": "Lunges",
+      "type": "Accessory",
+      "muscle_group": "Glutes"
+    },
+    {
+      "name": "Bicep Curl",
+      "type": "Accessory",
+      "muscle_group": "Biceps"
+    },
+    {
+      "name": "Romanian Deadlift",
+      "type": "Accessory",
+      "muscle_group": "Hamstrings"
+    },
+    {
+      "name": "Calve Raises",
+      "type": "Accessory",
+      "muscle_group": "Calves"
+    },
+    {
+      "name": "Leg Curl",
+      "type": "Accessory",
+      "muscle_group": "Hamstrings"
+    },
+    {
+      "name": "Face Pulls",
+      "type": "Accessory",
+      "muscle_group": "Shoulders"
+    },
+    {
+      "name": "Lateral Raises",
+      "type": "Accessory",
+      "muscle_group": "Shoulders"
+    },
+    {
+      "name": "Close Grip Bench Press",
+      "type": "Accessory",
+      "muscle_group": "Triceps"
+    }
+  ]
+}

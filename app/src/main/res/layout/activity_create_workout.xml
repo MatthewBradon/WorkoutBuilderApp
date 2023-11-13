@@ -232,7 +232,7 @@
         app:layout_constraintTop_toBottomOf="@+id/checkboxFriday" />
 
     <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/nameTextInput"
+        android:id="@+id/DescTextInput"
         android:layout_width="229dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="56dp"
@@ -266,7 +266,7 @@
         app:backgroundTint="@android:color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nameTextInput" />
+        app:layout_constraintTop_toBottomOf="@+id/DescTextInput" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
