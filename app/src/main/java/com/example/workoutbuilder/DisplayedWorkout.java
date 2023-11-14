@@ -1,5 +1,6 @@
 package com.example.workoutbuilder;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,10 +19,15 @@ import java.util.ArrayList;
 
 public class DisplayedWorkout extends AppCompatActivity {
 
-    Button stepCounterBtn, workoutsBtn;
+    private Button stepCounterBtn, workoutsBtn;
 
-    TextView titleTV;
-    RecyclerView workoutRV;
+    private TextView titleTV;
+    private RecyclerView workoutRV;
+
+    public static final int EDIT_EXERCISE_REQUEST = 1;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,7 +45,7 @@ public class DisplayedWorkout extends AppCompatActivity {
             Program program = Program.fromJSON(new JSONObject(programJSONString));
             titleTV.setText(program.getName());
 
-            WorkoutAdapter workoutAdapter = new WorkoutAdapter(this, program.getWorkouts());
+            WorkoutAdapter workoutAdapter = new WorkoutAdapter(this, program.getWorkouts(), programJSONString);
             workoutRV.setLayoutManager(new LinearLayoutManager(this));
             workoutRV.setAdapter(workoutAdapter);
 
@@ -63,5 +70,18 @@ public class DisplayedWorkout extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        System.out.println("test 3");
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == EDIT_EXERCISE_REQUEST && resultCode == RESULT_OK) {
+            setResult(RESULT_OK, data);
+            finish();
+        }
+    }
+
 }

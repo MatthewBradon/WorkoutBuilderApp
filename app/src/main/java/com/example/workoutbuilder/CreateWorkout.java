@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.Spinner;
 
 
@@ -28,7 +29,7 @@ import java.util.HashMap;
 public class CreateWorkout extends AppCompatActivity {
 
     private Button stepCounterBtn, workoutsBtn, createBtn;
-    private TextInputEditText workoutName, workoutDescription;
+    private EditText workoutName, workoutDescription;
     private Spinner spinner;
     private final ArrayList<CheckBox> daysOfWeek = new ArrayList<>();
     private HashMap<String, ArrayList<Exercise>> muscleGroupMap = new HashMap<>();

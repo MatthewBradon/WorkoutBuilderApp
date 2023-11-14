@@ -64,6 +64,7 @@ public class Program {
         json.put("workouts", workoutsToJSON());
         json.put("name", name);
         json.put("description", description);
+        json.put("id", id);
 
         return json;
     }
@@ -76,7 +77,9 @@ public class Program {
             workouts.add(Workout.fromJSON(jsonWorkout));
         }
         System.out.println(json.getString("name"));
-        return new Program(workouts, json.getString("name"), json.getString("description"));
+        Program program = new Program(workouts, json.getString("name"), json.getString("description"));
+        program.setId(json.getInt("id"));
+        return program;
     }
 
     @Override

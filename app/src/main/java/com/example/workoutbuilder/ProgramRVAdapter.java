@@ -1,5 +1,6 @@
 package com.example.workoutbuilder;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -16,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.json.JSONException;
 
 public class ProgramRVAdapter extends ListAdapter<Program, ProgramRVAdapter.ViewHolder> {
+
 
     private OnItemClickListener listener;
 
@@ -61,7 +63,8 @@ public class ProgramRVAdapter extends ListAdapter<Program, ProgramRVAdapter.View
             } catch (JSONException e){
                 e.printStackTrace();
             }
-            context.startActivity(intent);
+            ((Activity) context).startActivityForResult(intent, MainActivity.DISPLAY_WORKOUT_REQUEST);
+
         });
 
 

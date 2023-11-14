@@ -1,6 +1,7 @@
 package com.example.workoutbuilder;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,14 +13,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.ViewHolder> {
+public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.ViewHolder>{
 
     private Context context;
     private ArrayList<Workout> workouts;
 
-    public WorkoutAdapter(Context context, ArrayList<Workout> workouts) {
+    private String programJSONString;
+
+    public WorkoutAdapter(Context context, ArrayList<Workout> workouts, String programJSONString) {
         this.workouts = workouts;
         this.context = context;
+        this.programJSONString = programJSONString;
     }
 
     @NonNull
@@ -36,7 +40,7 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.ViewHold
 
         holder.workoutNameTV.setText(currentWorkout.getName());
         // Initialize and set up the ExerciseAdapter for the RecyclerView
-        ExerciseAdapter exerciseAdapter = new ExerciseAdapter(currentWorkout.getExercises());
+        ExerciseAdapter exerciseAdapter = new ExerciseAdapter(currentWorkout.getExercises(), context, programJSONString, currentWorkout.getName());
         holder.exerciseRecyclerView.setLayoutManager(new LinearLayoutManager(context));
         holder.exerciseRecyclerView.setAdapter(exerciseAdapter);
     }
