@@ -67,6 +67,24 @@ public class ProgramRVAdapter extends ListAdapter<Program, ProgramRVAdapter.View
 
         });
 
+        holder.deleteButton.setOnLongClickListener(v -> {
+
+            Intent intent = new Intent(context, DeleteProgram.class);
+            try {
+                String programJSONString = model.toJSON().toString();
+                System.out.println(programJSONString);
+                intent.putExtra("programJSONString", programJSONString);
+
+
+            } catch (JSONException e){
+                e.printStackTrace();
+            }
+            ((Activity) context).startActivityForResult(intent, MainActivity.DELETE_PROGRAM_REQUEST);
+
+
+            return false;
+        });
+
 
     }
 
@@ -78,11 +96,14 @@ public class ProgramRVAdapter extends ListAdapter<Program, ProgramRVAdapter.View
         TextView nameTV, descriptionTV;
         Button viewButton;
 
+        Button deleteButton;
+
         ViewHolder(@NonNull View itemView) {
             super(itemView);
             nameTV = itemView.findViewById(R.id.idTVName);
             descriptionTV = itemView.findViewById(R.id.idTVDesc);
             viewButton = itemView.findViewById(R.id.viewButton);
+            deleteButton = itemView.findViewById(R.id.deleteBtn);
 
             itemView.setOnClickListener(v -> {
                 int position = getAdapterPosition();

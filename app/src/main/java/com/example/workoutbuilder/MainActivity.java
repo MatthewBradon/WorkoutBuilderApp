@@ -24,8 +24,10 @@ public class MainActivity extends AppCompatActivity {
 
     private RecyclerView programRV;
 
-    private static final int ADD_COURSE_REQUEST = 1;
+    private static final int ADD_PROGRAM_REQUEST = 1;
     public static final int DISPLAY_WORKOUT_REQUEST = 2;
+
+    public static final int DELETE_PROGRAM_REQUEST = 3;
 
     private ViewModal viewModal;
 
@@ -50,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, CreateWorkout.class);
-                startActivityForResult(intent, ADD_COURSE_REQUEST);
+                startActivityForResult(intent, ADD_PROGRAM_REQUEST);
 
             }
         });
@@ -78,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         System.out.println("Test2");
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == ADD_COURSE_REQUEST && resultCode == RESULT_OK) {
+        if (requestCode == ADD_PROGRAM_REQUEST && resultCode == RESULT_OK) {
             String programJSONString = data.getStringExtra("program");
 
             try {
@@ -138,6 +140,20 @@ public class MainActivity extends AppCompatActivity {
                 }
 
             }
+        }
+
+        if(requestCode == DELETE_PROGRAM_REQUEST && resultCode == RESULT_OK) {
+            String programJSONString = data.getStringExtra("programJSONString");
+            System.out.println(programJSONString);
+            try {
+                Program program = Program.fromJSON(new JSONObject(programJSONString));
+                System.out.println(program);
+                viewModal.delete(program);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
         }
     }
 }
