@@ -5,16 +5,16 @@ import org.json.JSONObject;
 
 public class Exercise {
     private String name;
-    private int rpe;
+    private int set;
     private int reps;
 
     private String type;
     private String muscleGroup;
 
     // Constructor
-    public Exercise(String name, int rpe, int reps, String type, String muscleGroup) {
+    public Exercise(String name, int set, int reps, String type, String muscleGroup) {
         this.name = name;
-        this.rpe = rpe;
+        this.set = set;
         this.reps = reps;
         this.type = type;
         this.muscleGroup = muscleGroup;
@@ -29,13 +29,13 @@ public class Exercise {
         this.name = name;
     }
 
-    // Getter and Setter methods for RPE
-    public int getRpe() {
-        return rpe;
+    // Getter and Setter methods for set
+    public int getset() {
+        return set;
     }
 
-    public void setRpe(int rpe) {
-        this.rpe = rpe;
+    public void setset(int set) {
+        this.set = set;
     }
 
     // Getter and Setter methods for reps
@@ -66,7 +66,7 @@ public class Exercise {
     public JSONObject toJSON() throws JSONException {
         JSONObject json = new JSONObject();
         json.put("name", name);
-        json.put("rpe", rpe);
+        json.put("set", set);
         json.put("reps", reps);
         json.put("type", type);
         json.put("muscleGroup", muscleGroup);
@@ -80,7 +80,7 @@ public class Exercise {
     public String toString() {
         return "Exercise{" +
                 "name='" + name + '\'' +
-                ", rpe=" + rpe +
+                ", set=" + set +
                 ", reps=" + reps +
                 ", type='" + type + '\'' +
                 ", muscleGroup='" + muscleGroup + '\'' +
@@ -89,10 +89,10 @@ public class Exercise {
 
     public static Exercise fromJSON(JSONObject json) throws JSONException {
         String name = json.getString("name");
-        int rpe = json.getInt("rpe");
+        int set = json.getInt("set");
         int reps = json.getInt("reps");
         String type = json.getString("type");
         String muscleGroup = json.getString("muscleGroup");
-        return new Exercise(name, rpe, reps, type, muscleGroup);
+        return new Exercise(name, set, reps, type, muscleGroup);
     }
 }

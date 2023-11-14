@@ -11,7 +11,7 @@ import com.google.android.material.textfield.TextInputEditText;
 
 public class ChangeExercise extends AppCompatActivity {
 
-    private EditText nameET, repsET, rpeET;
+    private EditText nameET, repsET, setET;
     private Button changeBtn, workoutBtn;
     private String programJSONString;
     private String workoutName;
@@ -27,7 +27,7 @@ public class ChangeExercise extends AppCompatActivity {
 
         nameET = findViewById(R.id.editTVName);
         repsET = findViewById(R.id.editRepsTV);
-        rpeET = findViewById(R.id.editRpeTV);
+        setET = findViewById(R.id.editSetTV);
 
         changeBtn = findViewById(R.id.changeBtn);
 
@@ -39,13 +39,13 @@ public class ChangeExercise extends AppCompatActivity {
         changeBtn.setOnClickListener(v -> {
             String name = nameET.getText().toString();
             String reps = repsET.getText().toString();
-            String rpe = rpeET.getText().toString();
+            String set = setET.getText().toString();
 
             Intent data = new Intent();
 
             data.putExtra("name", name);
             data.putExtra("reps", reps);
-            data.putExtra("rpe", rpe);
+            data.putExtra("set", set);
             data.putExtra("programJSONString", programJSONString);
             data.putExtra("workoutName", workoutName);
             data.putExtra("exerciseToEditJSON", exerciseToEditJSON);

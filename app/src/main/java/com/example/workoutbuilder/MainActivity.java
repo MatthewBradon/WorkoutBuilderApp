@@ -65,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
         programRV.setAdapter(adapter);
 
         viewModal = ViewModelProviders.of(this).get(ViewModal.class);
+
         viewModal.getAllPrograms().observe(this, new Observer<List<Program>>() {
             @Override
             public void onChanged(List<Program> programs) {
@@ -96,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
 
                 String editedExerciseName = data.getStringExtra("name");
                 int editedReps = Integer.parseInt(data.getStringExtra("reps"));
-                int editedRpe = Integer.parseInt(data.getStringExtra("rpe"));
+                int editedSet = Integer.parseInt(data.getStringExtra("set"));
                 String programJSONString = data.getStringExtra("programJSONString");
                 String workoutName = data.getStringExtra("workoutName");
                 String exerciseToEditJSON = data.getStringExtra("exerciseToEditJSON");
@@ -118,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
                                 if(exercise.getName().equals(exerciseToEdit.getName())){
                                     exercise.setName(editedExerciseName);
                                     exercise.setReps(editedReps);
-                                    exercise.setRpe(editedRpe);
+                                    exercise.setset(editedSet);
                                     break;
                                 }
                             }

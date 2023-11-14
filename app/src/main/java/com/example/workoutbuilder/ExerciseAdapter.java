@@ -47,7 +47,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.ViewHo
         Exercise currentExercise = exercises.get(position);
 
         holder.exerciseNameTextView.setText(currentExercise.getName());
-        holder.rpeTextView.setText(String.valueOf(currentExercise.getRpe()));
+        holder.setTextView.setText(String.valueOf(currentExercise.getset()));
         holder.repTextView.setText(String.valueOf(currentExercise.getReps()));
 
         // Set OnLongClickListener for the TextView
@@ -82,13 +82,13 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.ViewHo
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView exerciseNameTextView;
-        public TextView rpeTextView;
+        public TextView setTextView;
         public TextView repTextView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             exerciseNameTextView = itemView.findViewById(R.id.exerciseName);
-            rpeTextView = itemView.findViewById(R.id.rpeTV);
+            setTextView = itemView.findViewById(R.id.setTV);
             repTextView = itemView.findViewById(R.id.repTV);
         }
     }
