@@ -197,11 +197,11 @@ public class CreateWorkout extends AppCompatActivity {
         exercises.add(generateCompound("Legs"));
         exercises.add(generateCompound("Shoulders"));
 
-        workouts.add(new Workout(exercises));
+        workouts.add(new Workout(exercises, "Full Body"));
 
         //Add a second workout if there are 2 available days
         if(numOfAvailableDays == 2){
-            workouts.add(new Workout(exercises));
+            workouts.add(new Workout(exercises, "Full Body 2"));
         }
         
         return workouts;
@@ -219,7 +219,7 @@ public class CreateWorkout extends AppCompatActivity {
         exercises.add(generateAccessory("Biceps"));
         exercises.add(generateAccessory("Triceps"));
 
-        workouts.add(new Workout(exercises));
+        workouts.add(new Workout(exercises, "Upper"));
 
         //Lower Body Workout
         exercises = new ArrayList<>();
@@ -230,7 +230,7 @@ public class CreateWorkout extends AppCompatActivity {
         exercises.add(generateAccessory("Glutes"));
         exercises.add(generateAccessory("Calves"));
 
-        workouts.add(new Workout(exercises));
+        workouts.add(new Workout(exercises, "Lower"));
 
         //Repeat if there are 4 available days
         if(numOfAvailableDays == 4){
@@ -244,7 +244,7 @@ public class CreateWorkout extends AppCompatActivity {
             exercises.add(generateAccessory("Biceps"));
             exercises.add(generateAccessory("Triceps"));
 
-            workouts.add(new Workout(exercises));
+            workouts.add(new Workout(exercises, "Upper 2"));
 
             //Lower Body Workout
             exercises = new ArrayList<>();
@@ -255,7 +255,7 @@ public class CreateWorkout extends AppCompatActivity {
             exercises.add(generateAccessory("Glutes"));
             exercises.add(generateAccessory("Calves"));
 
-            workouts.add(new Workout(exercises));
+            workouts.add(new Workout(exercises, "Lower 2"));
 
         }
 
@@ -275,7 +275,7 @@ public class CreateWorkout extends AppCompatActivity {
         exercises.add(generateAccessory("Chest"));
 
 
-        workouts.add(new Workout(exercises));
+        workouts.add(new Workout(exercises, "Push"));
 
         //Pull Workout
         exercises = new ArrayList<>();
@@ -286,7 +286,7 @@ public class CreateWorkout extends AppCompatActivity {
         exercises.add(generateAccessory("Shoulders"));
 
 
-        workouts.add(new Workout(exercises));
+        workouts.add(new Workout(exercises, "Pull"));
         //Legs Workout
         exercises = new ArrayList<>();
 
@@ -296,7 +296,7 @@ public class CreateWorkout extends AppCompatActivity {
         exercises.add(generateAccessory("Glutes"));
         exercises.add(generateAccessory("Calves"));
 
-        workouts.add(new Workout(exercises));
+        workouts.add(new Workout(exercises, "Legs"));
 
         //Repeat if there are 6 available days
         if(numOfAvailableDays == 6){
@@ -309,7 +309,7 @@ public class CreateWorkout extends AppCompatActivity {
             exercises.add(generateAccessory("Triceps"));
             exercises.add(generateAccessory("Chest")); 
 
-            workouts.add(new Workout(exercises));
+            workouts.add(new Workout(exercises, "Push 2"));
             //Pull Workout
             exercises = new ArrayList<>();
 
@@ -318,7 +318,7 @@ public class CreateWorkout extends AppCompatActivity {
             exercises.add(generateAccessory("Biceps"));
             exercises.add(generateAccessory("Shoulders"));
 
-            workouts.add(new Workout(exercises));
+            workouts.add(new Workout(exercises, "Pull 2"));
             //Legs Workout
             exercises = new ArrayList<>();
 
@@ -327,6 +327,8 @@ public class CreateWorkout extends AppCompatActivity {
             exercises.add(generateAccessory("Hamstrings"));
             exercises.add(generateAccessory("Glutes"));
             exercises.add(generateAccessory("Calves"));
+
+            workouts.add(new Workout(exercises, "Legs 2"));
         }
 
         return workouts;
@@ -343,7 +345,7 @@ public class CreateWorkout extends AppCompatActivity {
         exercises.add(generateAccessory("Triceps"));
         exercises.add(generateAccessory("Chest")); 
 
-        workouts.add(new Workout(exercises));
+        workouts.add(new Workout(exercises, "Push"));
         //Pull Workout
         exercises = new ArrayList<>();
 
@@ -353,7 +355,7 @@ public class CreateWorkout extends AppCompatActivity {
         exercises.add(generateAccessory("Shoulders"));
 
 
-        workouts.add(new Workout(exercises));
+        workouts.add(new Workout(exercises, "Pull"));
         //Legs Workout
         exercises = new ArrayList<>();
 
@@ -363,7 +365,7 @@ public class CreateWorkout extends AppCompatActivity {
         exercises.add(generateAccessory("Glutes"));
         exercises.add(generateAccessory("Calves"));
 
-        workouts.add(new Workout(exercises));
+        workouts.add(new Workout(exercises, "Legs"));
 
         //Upper Body Workout
         exercises.add(generateCompound("Chest"));
@@ -373,7 +375,7 @@ public class CreateWorkout extends AppCompatActivity {
         exercises.add(generateAccessory("Biceps"));
         exercises.add(generateAccessory("Triceps"));
 
-        workouts.add(new Workout(exercises));
+        workouts.add(new Workout(exercises, "Upper"));
 
         //Lower Body Workout
         exercises = new ArrayList<>();
@@ -384,7 +386,7 @@ public class CreateWorkout extends AppCompatActivity {
         exercises.add(generateAccessory("Glutes"));
         exercises.add(generateAccessory("Calves"));
 
-        workouts.add(new Workout(exercises));
+        workouts.add(new Workout(exercises, "Lower"));
         return workouts;
     }
 

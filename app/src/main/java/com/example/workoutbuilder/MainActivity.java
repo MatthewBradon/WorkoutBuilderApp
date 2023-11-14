@@ -62,12 +62,11 @@ public class MainActivity extends AppCompatActivity {
         programRV.setLayoutManager(new LinearLayoutManager(this));
         programRV.setHasFixedSize(true);
 
-        final ProgramRVAdapter adapter = new ProgramRVAdapter();
+        final ProgramRVAdapter adapter = new ProgramRVAdapter(this);
 
         programRV.setAdapter(adapter);
 
         viewModal = ViewModelProviders.of(this).get(ViewModal.class);
-
         viewModal.getAllPrograms().observe(this, new Observer<List<Program>>() {
             @Override
             public void onChanged(List<Program> programs) {

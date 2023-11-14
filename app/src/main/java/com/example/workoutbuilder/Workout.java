@@ -9,9 +9,13 @@ import java.util.ArrayList;
 public class Workout {
     private ArrayList<Exercise> exercises;
 
+    private String name;
+
     // Constructor
-    public Workout(ArrayList<Exercise> exercises) {
+    public Workout(ArrayList<Exercise> exercises, String name) {
         this.exercises = exercises;
+        this.name = name;
+
     }
 
     // Getter and Setter methods for exercises
@@ -40,6 +44,7 @@ public class Workout {
     public JSONObject toJSON() throws JSONException {
         JSONObject json = new JSONObject();
         json.put("exercises", exercisesToJSON());
+        json.put("name", name);
         return json;
     }
 
@@ -50,7 +55,8 @@ public class Workout {
             JSONObject jsonExercise = jsonArray.getJSONObject(i);
             exercises.add(Exercise.fromJSON(jsonExercise));
         }
-        return new Workout(exercises);
+
+        return new Workout(exercises, json.getString("name"));
     }
 
     //Display the workout as a string
@@ -60,5 +66,13 @@ public class Workout {
         return "Workout{" +
                 "exercises=" + exercises +
                 '}';
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
