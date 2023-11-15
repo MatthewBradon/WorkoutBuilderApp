@@ -16,7 +16,7 @@
         tools:layout_conversion_absoluteHeight="19dp"
         tools:layout_conversion_absoluteWidth="411dp"
         tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp"/>
+        tools:layout_editor_absoluteY="0dp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/exerciseRecyclerView"
@@ -26,6 +26,15 @@
         tools:layout_conversion_absoluteHeight="194dp"
         tools:layout_editor_absoluteY="19dp"
         tools:layout_editor_absoluteX="0dp"
-        tools:layout_conversion_absoluteWidth="411dp" />
+        tools:layout_conversion_absoluteWidth="411dp" >
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+    <Button
+        android:id="@+id/addExerciseBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@android:color/black"
+        android:text="Add Exercise" />
 
 </LinearLayout>

@@ -26,6 +26,8 @@ public class DisplayedWorkout extends AppCompatActivity {
 
     public static final int EDIT_EXERCISE_REQUEST = 1;
 
+    public static final int ADD_EXERCISE_REQUEST = 2;
+
 
 
     @Override
@@ -78,12 +80,19 @@ public class DisplayedWorkout extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         System.out.println("test 3");
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == EDIT_EXERCISE_REQUEST && resultCode == RESULT_OK) {
-            setResult(RESULT_OK, data);
-            finish();
+        if(requestCode == EDIT_EXERCISE_REQUEST){
+            if(resultCode == RESULT_OK){
+                setResult(RESULT_OK, data);
+                finish();
+            }
+            else if(resultCode == MainActivity.RESULT_DELETE) {
+                setResult(MainActivity.RESULT_DELETE, data);
+                finish();
+            }
         }
-        if(requestCode == EDIT_EXERCISE_REQUEST && resultCode == MainActivity.RESULT_DELETE){
-            setResult(MainActivity.RESULT_DELETE, data);
+        if(requestCode == ADD_EXERCISE_REQUEST && resultCode == MainActivity.RESULT_ADD){
+            System.out.println("Test456");
+            setResult(MainActivity.RESULT_ADD, data);
             finish();
         }
     }

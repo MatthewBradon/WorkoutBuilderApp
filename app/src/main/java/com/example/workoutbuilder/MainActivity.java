@@ -31,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
 
     public static final int RESULT_DELETE = -2;
 
+    public static final int RESULT_ADD = -3;
+
     private ViewModal viewModal;
 
     @Override
@@ -149,6 +151,34 @@ public class MainActivity extends AppCompatActivity {
                             }
                             break;
                         }
+                    }
+
+                    //Update the program
+                    viewModal.update(program);
+
+                } catch (JSONException e){
+                    e.printStackTrace();
+                }
+
+            }
+            else if (resultCode == RESULT_ADD){
+
+                String exerciseName = data.getStringExtra("name");
+                int reps = Integer.parseInt(data.getStringExtra("reps"));
+                int set = Integer.parseInt(data.getStringExtra("set"));
+                String programJSONString = data.getStringExtra("programJSONString");
+                String workoutName = data.getStringExtra("workoutName");
+
+                // Get the program from the JSON string
+                try {
+                    Program program = Program.fromJSON(new JSONObject(programJSONString));
+                    //Update the exercise
+                    for(Workout workout: program.getWorkouts()){
+                        if(workout.getName().equals(workoutName)){
+                            workout.addExercise(new Exercise(exerciseName, set, reps, "custom", "custom"));
+                        }
+                        break;
+
                     }
 
                     //Update the program

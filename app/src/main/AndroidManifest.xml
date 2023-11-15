@@ -22,9 +22,13 @@
         android:theme="@style/Theme.WorkoutBuilder"
         tools:targetApi="31">
         <activity
-            android:name=".DeleteProgram"
+            android:name=".AddExercise"
             android:exported="false"
             android:theme="@style/Theme.MaterialComponents.Light.NoActionBar"/>
+        <activity
+            android:name=".DeleteProgram"
+            android:exported="false"
+            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar" />
         <activity
             android:name=".ChangeExercise"
             android:exported="false"
