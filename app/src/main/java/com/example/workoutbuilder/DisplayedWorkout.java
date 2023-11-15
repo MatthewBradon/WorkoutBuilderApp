@@ -82,6 +82,10 @@ public class DisplayedWorkout extends AppCompatActivity {
             setResult(RESULT_OK, data);
             finish();
         }
+        if(requestCode == EDIT_EXERCISE_REQUEST && resultCode == MainActivity.RESULT_DELETE){
+            setResult(MainActivity.RESULT_DELETE, data);
+            finish();
+        }
     }
 
 }

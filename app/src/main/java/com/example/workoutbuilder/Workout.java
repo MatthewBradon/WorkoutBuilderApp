@@ -32,6 +32,10 @@ public class Workout {
         exercises.add(exercise);
     }
 
+    public void removeExercise(Exercise exercise) {
+        exercises.remove(exercise);
+    }
+
 
     public JSONArray exercisesToJSON() throws JSONException {
         JSONArray jsonArray = new JSONArray();

@@ -29,6 +29,8 @@ public class MainActivity extends AppCompatActivity {
 
     public static final int DELETE_PROGRAM_REQUEST = 3;
 
+    public static final int RESULT_DELETE = -2;
+
     private ViewModal viewModal;
 
     @Override
@@ -78,14 +80,12 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        System.out.println("Test2");
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == ADD_PROGRAM_REQUEST && resultCode == RESULT_OK) {
             String programJSONString = data.getStringExtra("program");
 
             try {
                 Program program = Program.fromJSON(new JSONObject(programJSONString));
-                System.out.println(program);
                 viewModal.insert(program);
 
             } catch (JSONException e) {
@@ -94,7 +94,6 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "Program saved", Toast.LENGTH_SHORT).show();
         }
         if(requestCode == DISPLAY_WORKOUT_REQUEST) {
-            System.out.println("Test1");
             if(resultCode == RESULT_OK) {
 
                 String editedExerciseName = data.getStringExtra("name");
@@ -104,17 +103,11 @@ public class MainActivity extends AppCompatActivity {
                 String workoutName = data.getStringExtra("workoutName");
                 String exerciseToEditJSON = data.getStringExtra("exerciseToEditJSON");
 
-                System.out.println(programJSONString);
-                System.out.println(exerciseToEditJSON);
-
                 // Get the program from the JSON string
                 try {
                     Program program = Program.fromJSON(new JSONObject(programJSONString));
                     Exercise exerciseToEdit = Exercise.fromJSON(new JSONObject(exerciseToEditJSON));
                     //Update the exercise
-
-                    System.out.println(program);
-                    System.out.println(exerciseToEdit);
                     for(Workout workout: program.getWorkouts()){
                         if(workout.getName().equals(workoutName)){
                             for(Exercise exercise: workout.getExercises()){
@@ -129,8 +122,34 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
 
-                    System.out.println("Updated Program");
-                    System.out.println(program);
+                    //Update the program
+                    viewModal.update(program);
+
+                } catch (JSONException e){
+                    e.printStackTrace();
+                }
+
+            }
+            else if(resultCode == RESULT_DELETE) {
+                String programJSONString = data.getStringExtra("programJSONString");
+                String workoutName = data.getStringExtra("workoutName");
+                String exerciseToEditJSON = data.getStringExtra("exerciseToEditJSON");
+
+                try {
+                    Program program = Program.fromJSON(new JSONObject(programJSONString));
+                    Exercise exerciseToDelete = Exercise.fromJSON(new JSONObject(exerciseToEditJSON));
+                    //Update the exercise
+                    for(Workout workout: program.getWorkouts()){
+                        if(workout.getName().equals(workoutName)){
+                            for (Exercise exercise : workout.getExercises()){
+                                if(exercise.getName().equals(exerciseToDelete.getName())){
+                                    workout.removeExercise(exercise);
+                                    break;
+                                }
+                            }
+                            break;
+                        }
+                    }
 
                     //Update the program
                     viewModal.update(program);
@@ -144,10 +163,8 @@ public class MainActivity extends AppCompatActivity {
 
         if(requestCode == DELETE_PROGRAM_REQUEST && resultCode == RESULT_OK) {
             String programJSONString = data.getStringExtra("programJSONString");
-            System.out.println(programJSONString);
             try {
                 Program program = Program.fromJSON(new JSONObject(programJSONString));
-                System.out.println(program);
                 viewModal.delete(program);
 
             } catch (JSONException e) {
