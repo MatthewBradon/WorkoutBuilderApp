@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -16,7 +15,6 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 
-import com.google.android.material.textfield.TextInputEditText;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -24,7 +22,6 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -372,6 +369,9 @@ public class CreateWorkout extends AppCompatActivity {
         workouts.add(new Workout(exercises, "Legs"));
 
         //Upper Body Workout
+
+        exercises = new ArrayList<>();
+
         exercises.add(generateCompound("Chest"));
         exercises.add(generateCompound("Back"));
         exercises.add(generateCompound("Shoulders"));
