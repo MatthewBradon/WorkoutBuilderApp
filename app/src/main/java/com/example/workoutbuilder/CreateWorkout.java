@@ -467,7 +467,7 @@ public class CreateWorkout extends AppCompatActivity {
                     String muscleGroup = jsonExercise.getString("muscle_group");
 
                     int repCount = type.equals("Compound") ? compoundRepCount : accessoryRepCount;
-                    int set = type.equals("Compound") ? 9 : 7;
+                    int set = type.equals("Compound") ? 3 : 4;
 
                     Exercise exercise = new Exercise(name, repCount, set, type, muscleGroup);
                     allExercises.add(exercise);

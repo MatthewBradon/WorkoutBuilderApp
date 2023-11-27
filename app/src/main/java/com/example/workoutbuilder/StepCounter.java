@@ -13,13 +13,17 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.Manifest;
 import android.widget.Toast;
+
+import java.util.Calendar;
 
 public class StepCounter extends AppCompatActivity implements SensorEventListener{
 
@@ -32,6 +36,11 @@ public class StepCounter extends AppCompatActivity implements SensorEventListene
 
     private int stepCount = 0;
 
+    private StepCountDatabase stepCountDatabase;
+    private StepCountDao stepCountDao;
+
+    private ProgressBar progressBar;
+
     @RequiresApi(api = Build.VERSION_CODES.Q)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +50,10 @@ public class StepCounter extends AppCompatActivity implements SensorEventListene
         stepCounterButton = findViewById(R.id.btnStepCounter);
         workoutsButton = findViewById(R.id.btnWorkouts);
         stepCounterTV = findViewById(R.id.stepCountTV);
+        progressBar = findViewById(R.id.progressBar);
 
+        progressBar.setMax(10000);
+        progressBar.setProgress(0);
 
         if (ContextCompat.checkSelfPermission(
                 this,
@@ -61,6 +73,10 @@ public class StepCounter extends AppCompatActivity implements SensorEventListene
         if(stepCounterSensor == null){
             stepCounterTV.setText("Step Counter not available");
         }
+
+        // Initialize the StepCountDatabase and StepCountDao
+        stepCountDatabase = StepCountDatabase.getInstance(this);
+        stepCountDao = stepCountDatabase.stepCountDao();
 
 
 
@@ -84,9 +100,10 @@ public class StepCounter extends AppCompatActivity implements SensorEventListene
         if(stepCounterSensor != null){
             sensorManager.registerListener(this, stepCounterSensor, SensorManager.SENSOR_DELAY_FASTEST);
         }
+        //displayStepsForToday();
     }
 
-    /*
+
     @Override
     protected void onStop() {
         super.onStop();
@@ -95,7 +112,6 @@ public class StepCounter extends AppCompatActivity implements SensorEventListene
             sensorManager.unregisterListener(this);
         }
     }
-     */
 
     //Methods to implement from SensorEventListener
     @Override
@@ -103,7 +119,16 @@ public class StepCounter extends AppCompatActivity implements SensorEventListene
         if(sensorEvent.sensor.getType() != Sensor.TYPE_STEP_COUNTER) return;
 
         stepCount = (int) sensorEvent.values[0];
-        stepCounterTV.setText(String.valueOf(stepCount));
+        //stepCounterTV.setText(String.valueOf(stepCount));
+
+        // Get today's date
+        Calendar calendar = Calendar.getInstance();
+        int currentDayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+
+        // Check if there is an entry for today in the database using AsyncTask
+        new CheckStepCountAsyncTask(stepCountDao, currentDayOfMonth, stepCount, stepCounterTV, progressBar).execute();
+
+
     }
 
     @Override
@@ -131,4 +156,95 @@ public class StepCounter extends AppCompatActivity implements SensorEventListene
         }
     }
 
+    private static class CheckStepCountAsyncTask extends AsyncTask<Void, Void, StepCountEntity> {
+        private StepCountDao stepCountDao;
+        private int currentDayOfMonth;
+        private int stepCount;
+
+        private TextView stepCounterTV;
+
+        private ProgressBar progressBar;
+
+        CheckStepCountAsyncTask(StepCountDao stepCountDao, int currentDayOfMonth, int stepCount, TextView stepCounterTV, ProgressBar progressBar) {
+            this.stepCountDao = stepCountDao;
+            this.currentDayOfMonth = currentDayOfMonth;
+            this.stepCount = stepCount;
+            this.stepCounterTV = stepCounterTV;
+            this.progressBar = progressBar;
+        }
+
+        @Override
+        protected StepCountEntity doInBackground(Void... voids) {
+            return stepCountDao.getStepCountByDay(currentDayOfMonth);
+        }
+
+        @Override
+        protected void onPostExecute(StepCountEntity todayStepCount) {
+            // Process the result on the main thread
+            if (todayStepCount != null) {
+                // Update the existing entry in the database using AsyncTask
+                new UpdateStepCountAsyncTask(stepCountDao, stepCounterTV,stepCount, progressBar).execute(todayStepCount);
+            } else {
+                // Insert a new entry for today in the database using AsyncTask
+                StepCountEntity newStepCountEntity = new StepCountEntity(stepCount, currentDayOfMonth);
+                new InsertStepCountAsyncTask(stepCountDao, stepCounterTV, progressBar).execute(newStepCountEntity);
+            }
+        }
+    }
+
+    private static class UpdateStepCountAsyncTask extends AsyncTask<StepCountEntity, Void, Integer> {
+        private StepCountDao stepCountDao;
+        private TextView stepCounterTV;
+
+        private ProgressBar progressBar;
+
+        private int stepCount;
+
+        UpdateStepCountAsyncTask(StepCountDao stepCountDao, TextView stepCounterTV, int stepCount, ProgressBar progressBar) {
+            this.stepCountDao = stepCountDao;
+            this.stepCounterTV = stepCounterTV;
+            this.stepCount = stepCount;
+            this.progressBar = progressBar;
+        }
+
+        @Override
+        protected Integer doInBackground(StepCountEntity... stepCountEntities) {
+            stepCountEntities[0].setStepCount(stepCount);
+            stepCountDao.updateStepCount(stepCountEntities[0]);
+            return stepCountEntities[0].getStepCount();
+        }
+
+        @Override
+        protected void onPostExecute(Integer currentStepCount) {
+            // Update the UI with the current step count
+            stepCounterTV.setText(String.valueOf(currentStepCount));
+            progressBar.setProgress(currentStepCount);
+        }
+    }
+
+    private static class InsertStepCountAsyncTask extends AsyncTask<StepCountEntity, Void, Integer> {
+        private StepCountDao stepCountDao;
+        private TextView stepCounterTV;
+
+        private ProgressBar progressBar;
+
+        InsertStepCountAsyncTask(StepCountDao stepCountDao, TextView stepCounterTV, ProgressBar progressBar) {
+            this.stepCountDao = stepCountDao;
+            this.stepCounterTV = stepCounterTV;
+            this.progressBar = progressBar;
+        }
+
+        @Override
+        protected Integer doInBackground(StepCountEntity... stepCountEntities) {
+            stepCountDao.insertStepCount(stepCountEntities[0]);
+            return stepCountEntities[0].getStepCount();
+        }
+
+        @Override
+        protected void onPostExecute(Integer currentStepCount) {
+            // Update the UI with the current step count
+            stepCounterTV.setText(String.valueOf(currentStepCount));
+            progressBar.setProgress(currentStepCount);
+        }
+    }
 }
