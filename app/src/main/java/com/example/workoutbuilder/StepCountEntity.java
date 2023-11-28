@@ -11,6 +11,7 @@ public class StepCountEntity {
 
     private int stepCount;
     private int dayOfMonth;
+    private int stepCountDifference;
 
     public StepCountEntity(int stepCount, int dayOfMonth) {
         this.stepCount = stepCount;
@@ -29,9 +30,19 @@ public class StepCountEntity {
         return stepCount;
     }
 
-    public void setStepCount(int stepCount) {this.stepCount = stepCount;}
+    public void setStepCount(int stepCount) {
+        this.stepCount = stepCount;
+    }
 
     public int getDayOfMonth() {
         return dayOfMonth;
+    }
+
+    public int getStepCountDifference() {
+        return stepCountDifference;
+    }
+
+    public void setStepCountDifference(int stepCountDifference) {
+        this.stepCountDifference = stepCountDifference;
     }
 }

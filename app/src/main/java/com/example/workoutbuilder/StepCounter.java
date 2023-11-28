@@ -175,76 +175,75 @@ public class StepCounter extends AppCompatActivity implements SensorEventListene
 
         @Override
         protected StepCountEntity doInBackground(Void... voids) {
-            return stepCountDao.getStepCountByDay(currentDayOfMonth);
+
+            StepCountEntity yesterdayStepCount = stepCountDao.getStepCountByDay(currentDayOfMonth-1);
+            StepCountEntity todayStepCount = stepCountDao.getStepCountByDay(currentDayOfMonth);
+
+            System.out.println(stepCountDao.getAllStepCounts());
+
+            System.out.println(yesterdayStepCount);
+            System.out.println(todayStepCount);
+
+            if(todayStepCount != null) {
+                todayStepCount.setStepCount(stepCount);
+                if(yesterdayStepCount != null){
+                    int difference = todayStepCount.getStepCount() - yesterdayStepCount.getStepCount();
+                    todayStepCount.setStepCountDifference(difference);
+                }
+            }
+            return todayStepCount;
         }
 
         @Override
         protected void onPostExecute(StepCountEntity todayStepCount) {
             // Process the result on the main thread
             if (todayStepCount != null) {
+                int difference = todayStepCount.getStepCountDifference();
+                stepCounterTV.setText(String.valueOf(difference == 0 ? stepCount : difference));
+                progressBar.setProgress(difference == 0 ? stepCount : difference);
                 // Update the existing entry in the database using AsyncTask
-                new UpdateStepCountAsyncTask(stepCountDao, stepCounterTV,stepCount, progressBar).execute(todayStepCount);
+                new UpdateStepCountAsyncTask(stepCountDao).execute(todayStepCount);
             } else {
                 // Insert a new entry for today in the database using AsyncTask
                 StepCountEntity newStepCountEntity = new StepCountEntity(stepCount, currentDayOfMonth);
-                new InsertStepCountAsyncTask(stepCountDao, stepCounterTV, progressBar).execute(newStepCountEntity);
+                new InsertStepCountAsyncTask(stepCountDao).execute(newStepCountEntity);
+                stepCounterTV.setText(String.valueOf(newStepCountEntity.getStepCount()));
+                progressBar.setProgress(newStepCountEntity.getStepCount());
+
             }
         }
     }
 
     private static class UpdateStepCountAsyncTask extends AsyncTask<StepCountEntity, Void, Integer> {
         private StepCountDao stepCountDao;
-        private TextView stepCounterTV;
 
-        private ProgressBar progressBar;
 
-        private int stepCount;
 
-        UpdateStepCountAsyncTask(StepCountDao stepCountDao, TextView stepCounterTV, int stepCount, ProgressBar progressBar) {
+
+        UpdateStepCountAsyncTask(StepCountDao stepCountDao) {
             this.stepCountDao = stepCountDao;
-            this.stepCounterTV = stepCounterTV;
-            this.stepCount = stepCount;
-            this.progressBar = progressBar;
+
         }
 
         @Override
         protected Integer doInBackground(StepCountEntity... stepCountEntities) {
-            stepCountEntities[0].setStepCount(stepCount);
             stepCountDao.updateStepCount(stepCountEntities[0]);
             return stepCountEntities[0].getStepCount();
-        }
-
-        @Override
-        protected void onPostExecute(Integer currentStepCount) {
-            // Update the UI with the current step count
-            stepCounterTV.setText(String.valueOf(currentStepCount));
-            progressBar.setProgress(currentStepCount);
         }
     }
 
     private static class InsertStepCountAsyncTask extends AsyncTask<StepCountEntity, Void, Integer> {
         private StepCountDao stepCountDao;
-        private TextView stepCounterTV;
 
-        private ProgressBar progressBar;
 
-        InsertStepCountAsyncTask(StepCountDao stepCountDao, TextView stepCounterTV, ProgressBar progressBar) {
+        InsertStepCountAsyncTask(StepCountDao stepCountDao) {
             this.stepCountDao = stepCountDao;
-            this.stepCounterTV = stepCounterTV;
-            this.progressBar = progressBar;
         }
 
         @Override
         protected Integer doInBackground(StepCountEntity... stepCountEntities) {
             stepCountDao.insertStepCount(stepCountEntities[0]);
             return stepCountEntities[0].getStepCount();
-        }
-
-        @Override
-        protected void onPostExecute(Integer currentStepCount) {
-            // Update the UI with the current step count
-            stepCounterTV.setText(String.valueOf(currentStepCount));
-            progressBar.setProgress(currentStepCount);
         }
     }
 }
