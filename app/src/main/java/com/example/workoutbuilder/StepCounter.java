@@ -78,8 +78,6 @@ public class StepCounter extends AppCompatActivity implements SensorEventListene
         stepCountDatabase = StepCountDatabase.getInstance(this);
         stepCountDao = stepCountDatabase.stepCountDao();
 
-
-
         //Navigation Buttons to other activities
         workoutsButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -199,6 +197,15 @@ public class StepCounter extends AppCompatActivity implements SensorEventListene
             // Process the result on the main thread
             if (todayStepCount != null) {
                 int difference = todayStepCount.getStepCountDifference();
+                if(difference < 0){
+                    //Counter has been reseted need to delete all step entities in db
+                    new DeleteAllStepCountAsyncTask(stepCountDao).execute();
+                    //Create a new entry for new step count
+                    StepCountEntity newStepCountEntity = new StepCountEntity(stepCount, currentDayOfMonth);
+                    new InsertStepCountAsyncTask(stepCountDao).execute(newStepCountEntity);
+                    stepCounterTV.setText(String.valueOf(newStepCountEntity.getStepCount()));
+                    progressBar.setProgress(newStepCountEntity.getStepCount());
+                }
                 stepCounterTV.setText(String.valueOf(difference == 0 ? stepCount : difference));
                 progressBar.setProgress(difference == 0 ? stepCount : difference);
                 // Update the existing entry in the database using AsyncTask
@@ -244,6 +251,21 @@ public class StepCounter extends AppCompatActivity implements SensorEventListene
         protected Integer doInBackground(StepCountEntity... stepCountEntities) {
             stepCountDao.insertStepCount(stepCountEntities[0]);
             return stepCountEntities[0].getStepCount();
+        }
+    }
+
+    private static class DeleteAllStepCountAsyncTask extends AsyncTask<StepCountEntity, Void, Integer> {
+        private StepCountDao stepCountDao;
+
+
+        DeleteAllStepCountAsyncTask(StepCountDao stepCountDao) {
+            this.stepCountDao = stepCountDao;
+        }
+
+        @Override
+        protected Integer doInBackground(StepCountEntity... stepCountEntities) {
+            stepCountDao.deleteAllStepCount();
+            return 0;
         }
     }
 }

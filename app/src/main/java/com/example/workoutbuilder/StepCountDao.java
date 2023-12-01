@@ -22,4 +22,7 @@ public interface StepCountDao {
     @Update
     void updateStepCount(StepCountEntity stepCountEntity);
 
+    @Query("DELETE FROM step_count")
+    void deleteAllStepCount();
+
 }
