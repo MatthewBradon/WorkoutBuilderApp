@@ -3,6 +3,7 @@ package com.example.workoutbuilder;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.widget.Button;
 
@@ -13,6 +14,7 @@ public class DeleteProgram extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_delete_program);
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         deleteBtn = findViewById(R.id.yesBtn);
         quitBtn = findViewById(R.id.noBtn);

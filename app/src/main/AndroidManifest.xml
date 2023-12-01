@@ -24,27 +24,33 @@
         <activity
             android:name=".AddExercise"
             android:exported="false"
-            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar"/>
+            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".DeleteProgram"
             android:exported="false"
-            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar" />
+            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ChangeExercise"
             android:exported="false"
-            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar" />
+            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".DisplayedWorkout"
             android:exported="false"
-            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar" />
+            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".StepCounter"
             android:exported="false"
-            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar" />
+            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar">
+            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -54,7 +60,8 @@
         <activity
             android:name=".CreateWorkout"
             android:exported="false"
-            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar" />
+            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>
