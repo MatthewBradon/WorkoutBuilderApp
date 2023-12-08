@@ -186,8 +186,12 @@ public class StepCounter extends AppCompatActivity implements SensorEventListene
 
             if(todayStepCount != null) {
                 todayStepCount.setStepCount(stepCount);
-                if(yesterdayStepCount != null){
+                if(yesterdayStepCount != null) {
                     int difference = todayStepCount.getStepCount() - yesterdayStepCount.getStepCount();
+                    todayStepCount.setStepCountDifference(difference);
+                } else {
+                    //I think
+                    int difference = stepCount - todayStepCount.getStepCountDifference();
                     todayStepCount.setStepCountDifference(difference);
                 }
             }
@@ -214,7 +218,9 @@ public class StepCounter extends AppCompatActivity implements SensorEventListene
                 new UpdateStepCountAsyncTask(stepCountDao).execute(todayStepCount);
             } else {
                 // Insert a new entry for today in the database using AsyncTask
+                //TODO Check for yesterday to calculate difference
                 StepCountEntity newStepCountEntity = new StepCountEntity(stepCount, currentDayOfMonth);
+                newStepCountEntity.setStepCountDifference(0);
                 new InsertStepCountAsyncTask(stepCountDao).execute(newStepCountEntity);
                 stepCounterTV.setText(String.valueOf(newStepCountEntity.getStepCount()));
                 progressBar.setProgress(newStepCountEntity.getStepCount());
