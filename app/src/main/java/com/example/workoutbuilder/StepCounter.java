@@ -179,19 +179,11 @@ public class StepCounter extends AppCompatActivity implements SensorEventListene
             StepCountEntity yesterdayStepCount = stepCountDao.getStepCountByDay(currentDayOfMonth-1);
             StepCountEntity todayStepCount = stepCountDao.getStepCountByDay(currentDayOfMonth);
 
-            System.out.println(stepCountDao.getAllStepCounts());
-
-            System.out.println(yesterdayStepCount);
-            System.out.println(todayStepCount);
 
             if(todayStepCount != null) {
                 todayStepCount.setStepCount(stepCount);
                 if(yesterdayStepCount != null) {
                     int difference = todayStepCount.getStepCount() - yesterdayStepCount.getStepCount();
-                    todayStepCount.setStepCountDifference(difference);
-                } else {
-                    //I think
-                    int difference = stepCount - todayStepCount.getStepCountDifference();
                     todayStepCount.setStepCountDifference(difference);
                 }
             }
